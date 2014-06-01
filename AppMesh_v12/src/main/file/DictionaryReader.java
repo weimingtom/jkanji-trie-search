@@ -120,7 +120,7 @@ public class DictionaryReader implements DictionaryInput {
 			}
 			int nodeBlockSize = node.toByteBuffer().position();
 			if (!isLargeFile) {
-				System.out.println("Index id == " + node.getId() + ", nodeBlockSize == " + nodeBlockSize);
+				System.out.println("Index id == " + node.getId() + ", nodeBlockSize == " + nodeBlockSize + ", node == " + node.toString());
 			} else {
 				if (node.getId() % 10000 == 0) {
 					System.out.println("Index id == " + node.getId() + ", nodeBlockSize == " + nodeBlockSize);

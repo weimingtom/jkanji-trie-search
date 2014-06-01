@@ -51,7 +51,9 @@ public class DictionaryInputStream implements DictionaryInput {
     			istr.close();
     		}
     		//TODO: Android mod
-    		InputStream inputStream = new BufferedInputStream(new FileInputStream(filename));
+    		//Exception in thread "main" java.io.IOException: Resetting to invalid mark
+    		InputStream inputStream = new BufferedInputStream(new FileInputStream(filename), 1024 * 1024 * 50);
+    		//InputStream inputStream = new FileInputStream(filename);
     		istr = inputStream;
     		if (istr.markSupported()) {
         		istr.mark(0);
@@ -72,8 +74,8 @@ public class DictionaryInputStream implements DictionaryInput {
     	node.setId(id);
     	node.setChar(character);
     	if (istr != null) {
-    		istr.reset();
-    		istr.skip(indexBlockSize + position);
+    		reset();
+    		skip(indexBlockSize + position);
     		node.setTerminal(getByte8() != 0 ? true : false);
     		int childSize = this.getInt32();
     		for (int i = 0; i < childSize; i++) {
@@ -106,8 +108,8 @@ public class DictionaryInputStream implements DictionaryInput {
      */
     public int readNodeListSize() throws IOException {
     	if (istr != null) {
-    		istr.reset();
-    		istr.skip(0);
+    		reset();
+    		skip(0);
     		return getInt32();
     	}
     	return 0;
@@ -121,8 +123,8 @@ public class DictionaryInputStream implements DictionaryInput {
      */
     public int readPositionById(int id) throws IOException {
     	if (istr != null) {
-    		istr.reset();
-    		istr.skip(4 + id * 6);
+    		reset();
+    		skip(4 + id * 6);
     		return getInt32();
     	}
     	return 0;    	
@@ -136,8 +138,8 @@ public class DictionaryInputStream implements DictionaryInput {
      */
     public char readCharById(int id) throws IOException {
     	if (istr != null) {
-    		istr.reset();
-    		istr.skip(4 + id * 6 + 4);
+    		reset();
+    		skip(4 + id * 6 + 4);
     		return getChar16();
     	}
     	return 0;    	
@@ -172,7 +174,7 @@ public class DictionaryInputStream implements DictionaryInput {
 	    	reset();
 	    	istr.read(bytes);
 	    	trace(Arrays.toString(bytes));
-	    	istr.reset();
+	    	reset();
 	    	istr.read(bytes);
 	    	trace(Arrays.toString(bytes));
 		} catch (IOException e) {
